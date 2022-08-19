@@ -10,9 +10,6 @@ from selenium.webdriver.support.select import Select
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
-with open("characters.json", "r") as f:
-    json_data = json.load(f)
-
 
 def de_optimized_image_url(image_url: str) -> str:
     if image_url.endswith(".webp"):
@@ -34,19 +31,12 @@ def GetChrome() -> webdriver.Chrome:
     return d
 
 
-def load_character_from_json(character_cn_name: str) -> dict:
-    for character_record in json_data:
-        if character_record["Name"] == character_cn_name:
-            return character_record
-
-
 def fetch_character_data(url: str) -> dict:
     character_special_talent_name = ""
     character_page_driver = GetChrome()
     character_page_driver.get(url)
     time.sleep(3)
     this_character_key_name = re.search(r"(\w)+(_(\d){3})", url).group().split("_")[0]
-    print("key: " + this_character_key_name)
     character_name = character_page_driver.find_element(By.CLASS_NAME, "wp-block-post-title").text
     print("character name: " + character_name)
     character_table = character_page_driver.find_element(By.CSS_SELECTOR, "table.genshin_table.main_table")
@@ -69,7 +59,6 @@ def fetch_character_data(url: str) -> dict:
                 # Talent
                 character_talent = character_talent_materials[2].find_element(By.TAG_NAME, "img")
                 character_talent_materials_name = character_talent.get_attribute("alt")[1:3]
-                print("character_talent_materials_name: " + character_talent_materials_name)
                 character_talent_materials_img_url = character_talent.get_attribute("src")
                 # Weekly
                 character_weekly = character_talent_materials[3].find_element(By.TAG_NAME, "img")
@@ -117,7 +106,7 @@ def fetch_character_data(url: str) -> dict:
         this_tr_row = tr_row.find_elements(By.TAG_NAME, "td")
         character_stat_data = list([x.text for x in this_tr_row])
         # if "+" not in character_stat_data[0]:
-        character_stat_table_list.append(character_stat_data[1:num_of_character_stat])
+        character_stat_table_list.append(character_stat_data[0:num_of_character_stat])
     # Character Skill Table
     character_skill_table = entire_table_area.find_element(By.ID, "char_skills")
     character_skill_title_list = character_skill_table.find_elements(By.CSS_SELECTOR, "span ~ table")
@@ -231,10 +220,11 @@ def fetch_character_data(url: str) -> dict:
 
     # Character Name Card
     character_related_items_area = character_page_driver.find_element(By.ID, "char_related_items")
-    character_related_items = character_related_items_area.find_element(By.CSS_SELECTOR, "div.scroll_wrap")\
+    character_related_items = character_related_items_area.find_element(By.CSS_SELECTOR, "div.scroll_wrap") \
         .find_elements(By.TAG_NAME, "tr")
-    character_profile_name_card_img_url = de_optimized_image_url(character_related_items[1].find_elements(By.TAG_NAME, "td")[0]\
-        .find_element(By.TAG_NAME, "img").get_attribute("src")).replace("png", "_profile.png")
+    character_profile_name_card_img_url = de_optimized_image_url(
+        character_related_items[2].find_elements(By.TAG_NAME, "td")[0] \
+        .find_element(By.TAG_NAME, "img").get_attribute("src")).replace(".png", "_profile.png")
 
     # Change result type
     if character_rarity == 4:
