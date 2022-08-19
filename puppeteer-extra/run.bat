@@ -1,0 +1,1 @@
+npx extract-stealth-evasions
