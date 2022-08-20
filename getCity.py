@@ -18,7 +18,9 @@ def getCharacterCity(characterKeyName):
         "rosaria",
         "sucrose",
         "venti",
-        "qin"
+        "qin",
+        "noel",
+        "ambor"
     ]
     Liyue = [
         "beidou",
@@ -55,7 +57,9 @@ def getCharacterCity(characterKeyName):
         "yoimiya",
         "ayato",
         "shinobu",
-        "heizo"
+        "heizo",
+        "tohma",
+        "yae"
     ]
     Sumeru = [
         "tighnari",
