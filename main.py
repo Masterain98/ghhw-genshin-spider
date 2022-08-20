@@ -37,10 +37,13 @@ def fetch_character_data(url: str) -> dict:
     character_page_driver.get(url)
     time.sleep(3)
     this_character_key_name = re.search(r"(\w)+(_(\d){3})", url).group().split("_")[0]
+    # Capture character name from title
     character_name = character_page_driver.find_element(By.CLASS_NAME, "wp-block-post-title").text
     print("character name: " + character_name)
+    # Find character stat table area
     character_table = character_page_driver.find_element(By.CSS_SELECTOR, "table.genshin_table.main_table")
     character_table_rows = character_table.find_elements(By.TAG_NAME, "tr")
+    # Transverse each row in the table
     for row in character_table_rows:
         columns_at_this_row = row.find_elements(By.TAG_NAME, "td")
         if columns_at_this_row[0].text == "Title":
@@ -214,7 +217,6 @@ def fetch_character_data(url: str) -> dict:
     character_gallery = character_page_driver.find_element(By.ID, "char_gallery")
     character_gallery_img_list = character_gallery.find_elements(By.CSS_SELECTOR, "div.gallery_cont")
     face_img_url = character_gallery_img_list[0].find_element(By.TAG_NAME, "a").get_attribute("href")
-    profile_img_url = character_gallery_img_list[1].find_element(By.TAG_NAME, "a").get_attribute("href")
     gacha_card_img_url = character_gallery_img_list[2].find_element(By.TAG_NAME, "a").get_attribute("href")
     gacha_splash_img_url = character_gallery_img_list[3].find_element(By.TAG_NAME, "a").get_attribute("href")
 
@@ -224,7 +226,7 @@ def fetch_character_data(url: str) -> dict:
         .find_elements(By.TAG_NAME, "tr")
     character_profile_name_card_img_url = de_optimized_image_url(
         character_related_items[2].find_elements(By.TAG_NAME, "td")[0] \
-        .find_element(By.TAG_NAME, "img").get_attribute("src")).replace(".png", "_profile.png")
+            .find_element(By.TAG_NAME, "img").get_attribute("src")).replace(".png", "_profile.png")
 
     # Change result type
     if character_rarity == 4:
@@ -435,33 +437,40 @@ def fetch_character_data(url: str) -> dict:
 
 
 if __name__ == "__main__":
+    start_time = int(time.time())
     result_list = []
-    # 加载主页面
+    # Load main page
     driver = GetChrome()
     driver.get("https://genshin.honeyhunterworld.com/fam_chars/?lang=CHS")
     time.sleep(4)
-    # 加载完整表格
+    # Click to expand all characters
     items_per_page_selection = Select(
         driver.find_element(By.XPATH, r'//*[@id="characters"]/table/tbody/tr/td[1]/select'))
     items_per_page_selection.select_by_visible_text("100")
-    # 读取表格数据
+    # Load table data
     table_element = driver.find_elements(By.XPATH, r'//*[@id="2083348006"]/tbody/tr')
     print(len(table_element))
     for i in range(len(table_element)):
         this_row = table_element[i].find_elements(By.TAG_NAME, 'td')
         this_row_character_name = this_row[1].text
+        # Skip traveler's data
         if this_row_character_name == "旅行者":
             continue
         this_character_detail_url = this_row[0].find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
         print(this_character_detail_url)
+        # Load character detail page via sub-webdriver
         result = fetch_character_data(this_character_detail_url)
         result_list.append(result)
+
     try:
         result_list = json.dumps(result_list, ensure_ascii=False, indent=4, separators=(',', ':'))
-        f_output = open("result2.json", mode="a", encoding='utf-8')
+        new_file_name = "characters-" + str(int(time.time())) + ".json"
+        f_output = open(new_file_name, mode="w+", encoding='utf-8')
         f_output.write(result_list)
         f_output.close()
     except Exception as e:
         print(e)
 
     driver.close()
+    end_time = int(time.time())
+    print("Task finished. Total time: " + str(end_time - start_time) + " seconds")
