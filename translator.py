@@ -19,7 +19,8 @@ def character_stat_translator(character_stat_name):
         "bonushydro": "水元素伤害",
         "bonuselec": "雷元素伤害",
         "bonuscryo": "冰元素伤害",
-        "bonuspyro": "火元素伤害"
+        "bonuspyro": "火元素伤害",
+        "bonusdendro": "草元素伤害"
     }
     try:
         return character_stat_name_dict[character_stat_name.lower().strip().replace("%", "")]
