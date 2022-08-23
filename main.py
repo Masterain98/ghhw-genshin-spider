@@ -177,6 +177,13 @@ def fetch_character_data(url: str) -> dict:
     passive_skill3_img_url = passive_skill3[0].find_element(By.TAG_NAME, "img").get_attribute("src")
     passive_skill3_description = passive_skill3[1].text
     talent_index += 1
+    # shougun fix
+    if this_character_key_name == "shougun":
+        passive_skill4 = character_skill_title_list[talent_index].find_elements(By.TAG_NAME, "tr")
+        passive_skill4_name = passive_skill4[0].text
+        passive_skill4_img_url = passive_skill4[0].find_element(By.TAG_NAME, "img").get_attribute("src")
+        passive_skill4_description = passive_skill4[1].text
+        talent_index += 1
     # Character Constellations Table
     character_constellation1_table = character_skill_title_list[talent_index].find_elements(By.TAG_NAME, "tr")
     character_constellation1_name = character_constellation1_table[0].text
@@ -389,6 +396,12 @@ def fetch_character_data(url: str) -> dict:
         "Source": de_optimized_image_url(passive_skill3_img_url),
         "Description": passive_skill3_description
     })
+    if this_character_key_name == "shougun":
+        passive_talents_list.append({
+            "Name": passive_skill4_name,
+            "Source": de_optimized_image_url(passive_skill4_img_url),
+            "Description": passive_skill4_description
+        })
     this_character_dict["PassiveTalents"] = passive_talents_list
     # Constellation
     constellation_dict = {
@@ -474,4 +487,4 @@ if __name__ == "__main__":
 
     driver.close()
     end_time = int(time.time())
-    print("Task finished. Total time: " + str(end_time - start_time) + " seconds")
+    print("\nTask finished. Total time: " + str(end_time - start_time) + " seconds")
