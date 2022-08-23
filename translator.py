@@ -13,16 +13,20 @@ def character_stat_translator(character_stat_name):
         "bonusheal": "治疗加成",
         "bonusem": "元素精通",
         "bonuser": "元素充能效率",
-        "bonusphys":"物理伤害",
+        "bonusphys": "物理伤害",
         "bonusanemo": "风元素伤害",
         "bonusgeo": "岩元素伤害",
         "bonushydro": "水元素伤害",
         "bonuselec": "雷元素伤害",
         "bonuscryo": "冰元素伤害",
         "bonuspyro": "火元素伤害",
-        "bonusdendro": "草元素伤害"
+        "bonusdendro": "草元素伤害",
+        "lv": "Lv"
     }
+
     try:
+        print(character_stat_name + " is translated to " + str(
+            character_stat_name_dict[character_stat_name.lower().replace("%", "").replace(" ", "")]))
         return character_stat_name_dict[character_stat_name.lower().strip().replace("%", "")]
     except KeyError:
         return character_stat_name

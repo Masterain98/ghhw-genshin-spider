@@ -400,7 +400,7 @@ def fetch_character_data(url: str) -> dict:
         "Constellation2": {
             "Name": character_constellation2_name,
             "Source": de_optimized_image_url(character_constellation2_img_url),
-            "Description": character_constellation3_description
+            "Description": character_constellation2_description
         },
         "Constellation3": {
             "Name": character_constellation3_name,
