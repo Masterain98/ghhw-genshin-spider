@@ -448,7 +448,8 @@ if __name__ == "__main__":
         driver.find_element(By.XPATH, r'//*[@id="characters"]/table/tbody/tr/td[1]/select'))
     items_per_page_selection.select_by_visible_text("100")
     # Load table data
-    table_element = driver.find_elements(By.XPATH, r'//*[@id="2083348006"]/tbody/tr')
+    table_element = driver.find_element(By.ID, "characters").find_element(By.CSS_SELECTOR, "div.scroll_wrap")\
+        .find_element(By.CSS_SELECTOR, "table").find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME, "tr")
     print(len(table_element))
     for i in range(len(table_element)):
         this_row = table_element[i].find_elements(By.TAG_NAME, 'td')
