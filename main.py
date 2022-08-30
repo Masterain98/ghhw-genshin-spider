@@ -178,7 +178,7 @@ def fetch_character_data(url: str) -> dict:
     passive_skill3_description = passive_skill3[1].text
     talent_index += 1
     # shougun fix
-    if this_character_key_name == "shougun":
+    if this_character_key_name == "shougun" or this_character_key_name == "kokomi":
         passive_skill4 = character_skill_title_list[talent_index].find_elements(By.TAG_NAME, "tr")
         passive_skill4_name = passive_skill4[0].text
         passive_skill4_img_url = passive_skill4[0].find_element(By.TAG_NAME, "img").get_attribute("src")
@@ -396,7 +396,7 @@ def fetch_character_data(url: str) -> dict:
         "Source": de_optimized_image_url(passive_skill3_img_url),
         "Description": passive_skill3_description
     })
-    if this_character_key_name == "shougun":
+    if this_character_key_name == "shougun" or this_character_key_name == "kokomi":
         passive_talents_list.append({
             "Name": passive_skill4_name,
             "Source": de_optimized_image_url(passive_skill4_img_url),
